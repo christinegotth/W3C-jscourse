@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Draw a monster in a canvas</title>
+<style id="jsbin-css">
+canvas {
+  border: 1px solid black;
+}
+</style>
+</head>
+<body>
+  <canvas id="myCanvas"  width="200" height="200"></canvas>
+<script id="jsbin-javascript">
+var canvas, ctx, w, h; 
+var xMonster = 10;
+var yMonster = 10;
+var monsterSpeed = 1;
+
+window.onload = function init() {
+    canvas = document.querySelector("#myCanvas");
+  
+    w = canvas.width; 
+    h = canvas.height;  
+  
+    ctx = canvas.getContext('2d');
+  
+    mainLoop();
+};
+
+function mainLoop() {
+  ctx.clearRect(0, 0, w, h);
+  
+  drawMyMonster(xMonster, yMonster);
+  
+  yMonster += monsterSpeed;
+  
+  if (((yMonster + 100)> w) || (yMonster < 0))  {
+    monsterSpeed = -monsterSpeed;
+  }
+  
+  requestAnimationFrame(mainLoop);
+}
+
+function drawMyMonster(x, y) {
+    ctx.save();
+  
+    ctx.translate(x, y);
+  
+    ctx.strokeRect(0, 0, 100, 100);
+  
+    ctx.fillRect(20, 20, 10, 10);
+    ctx.fillRect(65, 20, 10, 10);
+  
+    ctx.strokeRect(45, 40, 10, 40);
+  
+    ctx.strokeRect(35, 84, 30, 10);
+  
+    ctx.fillRect(38, 84, 10, 10);
+    ctx.fillRect(52, 84, 10, 10);
+  
+    ctx.restore();
+}
+</script>
+
+<script id="jsbin-source-html" type="text/html">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Draw a monster in a canvas</title>
+</head>
+<body>
+  <canvas id="myCanvas"  width="200" height="200"></canvas>
+</body>
+</html>
+
+</script>
+
+<script id="jsbin-source-css" type="text/css">
+
+canvas {
+  border: 1px solid black;
+}
+
+</script>
+
+<script id="jsbin-source-javascript" type="text/javascript">var canvas, ctx, w, h; 
+var xMonster = 10;
+var yMonster = 10;
+var monsterSpeed = 1;
+
+window.onload = function init() {
+    canvas = document.querySelector("#myCanvas");
+  
+    w = canvas.width; 
+    h = canvas.height;  
+  
+    ctx = canvas.getContext('2d');
+  
+    mainLoop();
+};
+
+function mainLoop() {
+  ctx.clearRect(0, 0, w, h);
+  
+  drawMyMonster(xMonster, yMonster);
+  
+  yMonster += monsterSpeed;
+  
+  if (((yMonster + 100)> w) || (yMonster < 0))  {
+    monsterSpeed = -monsterSpeed;
+  }
+  
+  requestAnimationFrame(mainLoop);
+}
+
+function drawMyMonster(x, y) {
+    ctx.save();
+  
+    ctx.translate(x, y);
+  
+    ctx.strokeRect(0, 0, 100, 100);
+  
+    ctx.fillRect(20, 20, 10, 10);
+    ctx.fillRect(65, 20, 10, 10);
+  
+    ctx.strokeRect(45, 40, 10, 40);
+  
+    ctx.strokeRect(35, 84, 30, 10);
+  
+    ctx.fillRect(38, 84, 10, 10);
+    ctx.fillRect(52, 84, 10, 10);
+  
+    ctx.restore();
+}
+  
+</script></body>
+</html>
