@@ -13,14 +13,7 @@ canvas {
   <canvas id="myCanvas"  width="200" height="200"></canvas>
 <script id="jsbin-javascript">
 var canvas, ctx, w, h; 
-var ball = {
-  x: 100,
-  y:100,
-  radius: 15,
-  color:'green',
-  speedX:2,
-  speedY:1
-}
+var balls = []; 
 
 var player = {
   x:10,
@@ -38,6 +31,8 @@ window.onload = function init() {
   
     ctx = canvas.getContext('2d');
   
+    balls = createBalls(10);
+  
     mainLoop();
 };
 
@@ -45,47 +40,85 @@ function mainLoop() {
   ctx.clearRect(0, 0, w, h);
   
   drawFilledRectangle(player);
-  drawFilledCircle(ball);
+  drawAllBalls(balls);
 
-  moveBall(ball);
+  moveAllBalls(balls)
   
   requestAnimationFrame(mainLoop);
 }
 
-function moveBall(b) {
-  b.x += b.speedX;
-  b.y += b.speedY;
+function createBalls(n) {
+  var ballArray = [];
   
-  testCollisionBallWithWalls(b);
+  for(var i=0; i < n; i++) {
+     var b = {
+        x:w/2,
+        y:h/2,
+        radius: 5 + 30 * Math.random(), 
+        speedX: -5 + 10 * Math.random(), 
+        speedY: -5 + 10 * Math.random(), 
+        color:getARandomColor(),
+      }
+     ballArray.push(b);
+  }
+  return ballArray;
+}
+
+function getARandomColor() {
+  var colors = ['red', 'blue', 'cyan', 'purple', 'pink', 'yellow'];
+  var colorIndex = Math.round((colors.length-1)*Math.random()); 
+  var c = colors[colorIndex];
+ 
+  return c;
+}
+
+function drawAllBalls(ballArray) {
+    ballArray.forEach(function(b) {
+      drawFilledCircle(b);
+    });
+}
+
+function moveAllBalls(ballArray) {
+  ballArray.forEach(function(b) {
+     
+      b.x += b.speedX;
+      b.y += b.speedY;
+  
+      testCollisionBallWithWalls(b); 
+  });
 }
 
 function testCollisionBallWithWalls(b) {
-    // COLLISION WITH VERTICAL WALLS ?
+   
     if((b.x + b.radius) > w) {
+   
     b.speedX = -b.speedX;
     
     b.x = w - b.radius;
   } else if((b.x -b.radius) < 0) {
+  
     b.speedX = -b.speedX;
-    
+   
     b.x = b.radius;
   }
+
+  if((b.y + b.radius) > h) {
   
-  // COLLISIONS WTH HORIZONTAL WALLS ?
-   if((b.y + b.radius) > h) {
     b.speedY = -b.speedY;
     
     b.y = h - b.radius;
   } else if((b.y -b.radius) < 0) {
+  
     b.speedY = -b.speedY;
-    
+   
     b.Y = b.radius;
   }  
 }
 
 function drawFilledRectangle(r) {
+
     ctx.save();
-  
+ 
     ctx.translate(r.x, r.y);
   
     ctx.fillStyle = r.color;
@@ -96,17 +129,17 @@ function drawFilledRectangle(r) {
 }
 
 function drawFilledCircle(c) {
-
+    
     ctx.save();
-  
+
     ctx.translate(c.x, c.y);
   
     ctx.fillStyle = c.color;
-    
+
     ctx.beginPath();
     ctx.arc(0, 0, c.radius, 0, 2*Math.PI);
     ctx.fill();
- 
+
     ctx.restore();
 }
 </script>
