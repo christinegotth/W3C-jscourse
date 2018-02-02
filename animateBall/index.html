@@ -13,6 +13,7 @@ canvas {
   <canvas id="myCanvas"  width="200" height="200"></canvas>
 <script id="jsbin-javascript">
 var canvas, ctx, w, h; 
+var mousePos;
 var balls = []; 
 
 var player = {
@@ -33,18 +34,52 @@ window.onload = function init() {
   
     balls = createBalls(10);
   
+    canvas.addEventListener('mousemove', mouseMoved);
+  
     mainLoop();
 };
+
+function mouseMoved(evt) {
+  mousePos = getMousePos(canvas, evt);
+}
+
+function getMousePos(canvas, evt) {
+  var rest = canvas.getBoundingClientRect();
+  return {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top
+  }
+}
+
+function movePlayerWithMouse() {
+  if(mousePos !== undefined){
+    player.x = mousePos.x;
+    player.y = mousePos.y;  
+    }
+  }
 
 function mainLoop() {
   ctx.clearRect(0, 0, w, h);
   
   drawFilledRectangle(player);
   drawAllBalls(balls);
+  drawNumberOfBallsAlive(balls);
 
-  moveAllBalls(balls)
+  moveAllBalls(balls);
+  
+  movePlayerWithMouse();
   
   requestAnimationFrame(mainLoop);
+}
+
+function circRectsOverlap(x0, y0, w0, h0, cx, cy, r) {
+  var testX=cx;
+  var testY=cy;
+  if (testX < x0) testX=x0;
+  if (testX > (x0+w0)) testX=(x0+w0);
+  if (testY < y0) testY=y0;
+  if (testY > (y0+h0)) testY=(y0+h0);
+  return (((cx-testX)*(cx-testX)+(cy-testY)*(cy-testY))< r*r);
 }
 
 function createBalls(n) {
@@ -72,6 +107,18 @@ function getARandomColor() {
   return c;
 }
 
+function drawNumberOfBallsAlive(balls) {
+  ctx.save();
+  ctx.font="30px Arial";
+  
+  if(balls.length === 0) {
+    ctx.fillText("YOU WIN!", 20, 30);
+  } else {
+    ctx.fillText(balls.length, 20,30);
+  }
+  ctx.restore();
+}
+
 function drawAllBalls(ballArray) {
     ballArray.forEach(function(b) {
       drawFilledCircle(b);
@@ -86,6 +133,12 @@ function moveAllBalls(ballArray) {
   
       testCollisionBallWithWalls(b); 
   });
+}
+
+function testCollisionWithPlayer(b, index) {
+  if(circRectsOverlap(player.x, player.y, player.width, player.height, b.x, b.y, b.radius)) {
+    balls.splice(index, 1);
+  }
 }
 
 function testCollisionBallWithWalls(b) {
